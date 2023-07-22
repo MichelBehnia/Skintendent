@@ -58,7 +58,7 @@ const Main = () => {
             usersImage.push(webcamRef.current.getScreenshot())
         }
 
-        axios.post("/analyzeSkin", {image: usersImage}).then((apiResponse) => {
+        axios.post("https://skintendent-backend.onrender.com/analyzeSkin", {image: usersImage}).then((apiResponse) => {
             let error = null
             if(apiResponse.data.error_message){
                 if(apiResponse.data.error_message.indexOf(":") !== -1){
@@ -136,7 +136,7 @@ const Main = () => {
                 setSkinAnalysis(skinAnalysisArray)
                 let skinAnalysisArrayString = skinAnalysisArray.toString()
 
-                axios.post("/skinAdvice", {imperfections: skinAnalysisArrayString}).then((apiResponse) => {
+                axios.post("https://skintendent-backend.onrender.com/skinAdvice", {imperfections: skinAnalysisArrayString}).then((apiResponse) => {
                     setAiReccomendation(apiResponse.data.split("\n"))
                     setLoading(false)
                     setShow(true)
