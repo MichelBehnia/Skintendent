@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const axios = require('axios')
+const cors = require('cors')
 const {Configuration, OpenAIApi} = require('openai')
 app.use(express.json())
 const PORT = process.env.PORT || 5000
@@ -15,6 +16,8 @@ const configuration = new Configuration({
     apiKey: process.env.GPT_API_KEY
 })
 const openai = new OpenAIApi(configuration)
+
+app.use(cors())
 
 app.post('/analyzeSkin', (req, res) => {
   if(req.body.image[0] === "url"){
