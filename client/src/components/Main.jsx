@@ -6,7 +6,7 @@ import { Dna } from  'react-loader-spinner'
 import { TypeAnimation } from 'react-type-animation';
 
 const Main = () => {
-
+//Make a backend host variable for axios post calls and set it to onrender link
     let [image, setImage] = useState('')
     let [skinAnalysis, setSkinAnalysis] = useState([])
     let [aiReccomendation, setAiReccomendation] = useState('')
@@ -152,16 +152,16 @@ const Main = () => {
     }
 
     return (
-        <div className="w-full h-screen bg-slate-950 flex flex-col pt-5">
-            <div className="bg-slate-950 grid lg:grid-cols-2 max-w-[1440px] m-auto">
+        <div className="w-full h-screen bg-slate-50 flex flex-col pt-5">
+            <div className="bg-slate-50 grid lg:grid-cols-2 max-w-[1440px] m-auto">
                 <div className="flex flex-col justify-center items-center w-full px-2 py-8">
                     <div className="mx-auto">
-                        <h1 className="text-gray-200 py-3 text-6xl md:text-7xl font-bold animate-flip-up animate-once animate-duration-1000 animate-delay-0 animate-ease-in-out">Skintendent.</h1>
-                        <p className="text-gray-300 text-2xl md:text-3xl pb-3 animate-fade animate-once animate-duration-1000 animate-delay-[250ms] animate-ease-in">personalized skin care using <TypeAnimation sequence={['Face++',1000, 'ChatGPT',1000]} wrapper="span" speed={300} className="text-gray-300 text-2xl md:text-3xl" repeat={Infinity}/></p>
+                        <h1 className="text-zinc-950 py-3 text-6xl md:text-7xl font-bold animate-flip-up animate-once animate-duration-1000 animate-delay-0 animate-ease-in-out">Skintendent.</h1>
+                        <p className="text-zinc-900 text-2xl md:text-3xl pb-3 animate-fade animate-once animate-duration-1000 animate-delay-[250ms] animate-ease-in">get a personalized skin care plan using <TypeAnimation sequence={['Face++',1000, 'ChatGPT',1000]} wrapper="span" speed={300} className="text-zinc-900 text-2xl md:text-3xl" repeat={Infinity}/></p>
 
                         <form onSubmit={handleSubmit}>
                             <input className="py-3 px-2 w-[100%] my-2 text-xl md:text-1xl" type="text" placeholder="Enter an image URL" name="userInputtedURL"/>
-                            <input className="text-white pb-3 pt-2 w-[100%] my-2 text-xl md:text-1xl" type="file" accept=".jpeg, .jpg" name="userUploadedImage"/>
+                            <input className="text-zinc-900  pb-3 pt-2 w-[100%] my-2 text-xl md:text-1xl" type="file" accept=".jpeg, .jpg" name="userUploadedImage"/>
                             <button className="transition ease-in-out delay-75 py-3 px-6 w-[100%] text-xl md:text-1xl">Get Started</button>
                             <p className="text-red-500 text-center pt-5 font-bold text-xl" ref={errorRef}></p>
                         </form>
@@ -172,12 +172,12 @@ const Main = () => {
                 </div>
 
             </div>
-            <div className="flex justify-center bg-slate-950">
+            <div className="flex justify-center bg-slate-50">
                 {
                     loading ? <div className="h-[1080px] flex items-center"><section ref={refToScroll}><Dna visible={true} height="180" width="180" ariaLabel="dna-loading" wrapperStyle={{}} wrapperClass="dna-wrapper"/></section></div> : null   
                 }
             </div>
-            <div className="bg-slate-950">
+            <div className="bg-slate-50">
                 {
                     show ? <div className="h-[1080px] flex justify-center items-center"><SkinAnalysis {...props}/></div>: null
                 }
