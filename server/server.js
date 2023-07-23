@@ -131,6 +131,18 @@ app.post('/skinAdvice', async (req, res) => {
 
 })
 
+app.get('/searchForProducts', (req, res) => {
+  axios.get("https://amazon23.p.rapidapi.com/product-search", {
+    params: {
+      query: 'Retinol Serum'
+    },
+    headers: {
+      'X-RapidAPI-Key': '48c5da06e5msh3fda1a57bb0011cp194fcajsn386f79eb8e5e',
+      'X-RapidAPI-Host': 'amazon23.p.rapidapi.com'
+    }
+  })
+})
+
 app.listen(PORT, err => {
   if(err) console.log(err)
   else {
