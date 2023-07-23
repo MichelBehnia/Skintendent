@@ -140,6 +140,8 @@ app.get('/searchForProducts', (req, res) => {
       'X-RapidAPI-Key': '48c5da06e5msh3fda1a57bb0011cp194fcajsn386f79eb8e5e',
       'X-RapidAPI-Host': 'amazon23.p.rapidapi.com'
     }
+  }).then((apiResponse) => {
+    res.send(apiResponse)
   })
 })
 
