@@ -1,8 +1,9 @@
 import React, {useState, useRef} from "react"
 import axios from "axios"
 import SkinAnalysis from "./SkinAnalysis"
+import SearchForProducts from "./SearchForProducts"
 import Webcam from "react-webcam"
-import { Dna } from  'react-loader-spinner'
+import { Dna, MagnifyingGlass} from  'react-loader-spinner'
 import { TypeAnimation } from 'react-type-animation';
 
 const Main = () => {
@@ -10,55 +11,37 @@ const Main = () => {
     let [image, setImage] = useState('')
     let [skinAnalysis, setSkinAnalysis] = useState([])
     let [aiReccomendation, setAiReccomendation] = useState('')
-    let [show, setShow] = useState(false)
-    let [loading, setLoading] = useState(false) 
+    let [showSkinAnalysis, setShowSkinAnalysis] = useState(false)
+    let [loadingSkinAnalysis, setLoadingSkinAnalysis] = useState(false) 
 
-    const refToScroll = useRef(null)
+    let [showProducts, setShowProducts] = useState(false)
+    let [loadingSearchForProducts, setLoadingSearchForProducts] = useState(false)
+    let [listOfProducts, setListOfProducts] = useState([])
+    const scrollToProducts = useRef(null)
+
+    const scrollToSkinAnalysis = useRef(null)
     const webcamRef = useRef(null)
     const errorRef = useRef(null)
 
-    const convertBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader()
-            fileReader.readAsDataURL(file)
-
-            fileReader.onload = () => {
-                resolve(fileReader.result)
-            }
-        })
-    }
-
-    const handleSubmit = async (event) =>{
+    const handleSubmitForSkinAnalysis = async (event) =>{
 
         event.preventDefault()
 
-        setShow(false)
+        setShowSkinAnalysis(false)
+        setShowProducts(false)
         errorRef.current.innerText = ""
-        setLoading(true)
+        setLoadingSkinAnalysis(true)
+
         setTimeout(() => {
-            refToScroll.current?.scrollIntoView({behavior: 'smooth'})
+            scrollToSkinAnalysis.current?.scrollIntoView({behavior: 'smooth'})
         }, 250)
 
         let usersImage = []
-
-        if(event.target.userInputtedURL.value !== ""){
-            setImage(event.target.userInputtedURL.value)
-            usersImage.push("url")
-            usersImage.push(event.target.userInputtedURL.value)
-            event.target.userInputtedURL.value = null
-        } else if(event.target.userUploadedImage.files[0]){
-            const convertedImage = await convertBase64(event.target.userUploadedImage.files[0])
-            setImage(convertedImage)
-            usersImage.push("file")
-            usersImage.push(convertedImage)
-            event.target.userUploadedImage.value = null
-        } else{
-            setImage(webcamRef.current.getScreenshot())
-            usersImage.push("webcam")
-            usersImage.push(webcamRef.current.getScreenshot())
-        }
-
-        axios.post("https://skintendent-backend.onrender.com/analyzeSkin", {image: usersImage}).then((apiResponse) => {
+        setImage(webcamRef.current.getScreenshot())
+        usersImage.push("webcam")
+        usersImage.push(webcamRef.current.getScreenshot())
+        
+        axios.post("/analyzeSkin", {image: usersImage}).then((apiResponse) => {
             let error = null
             if(apiResponse.data.error_message){
                 if(apiResponse.data.error_message.indexOf(":") !== -1){
@@ -69,31 +52,31 @@ const Main = () => {
 
                 switch(error){
                     case "NO_FACE_FOUND":
-                        setLoading(false)
-                        errorRef.current.innerText = "No face detected in image"
+                        setLoadingSkinAnalysis(false)
+                        errorRef.current.innerText = "No face detected"
                         break
                     case "INVALID_IMAGE_FACE":
-                        setLoading(false)
+                        setLoadingSkinAnalysis(false)
                         errorRef.current.innerText = "Make sure image is just your full face"
                         break
                     case "INVALID_IMAGE_SIZE":
-                        setLoading(false)
-                        errorRef.current.innerText = "Image too small or large"
+                        setLoadingSkinAnalysis(false)
+                        errorRef.current.innerText = "Image size is invalid"
                         break
                     case "INVALID_IMAGE_URL":
-                        setLoading(false)
+                        setLoadingSkinAnalysis(false)
                         errorRef.current.innerText = "Image URL is invalid"
                         break
                     case "IMAGE_FILE_TOO_LARGE":
-                        setLoading(false)
-                        errorRef.current.innerText = "Image file too large"
+                        setLoadingSkinAnalysis(false)
+                        errorRef.current.innerText = "Image file is too large"
                         break
                     case "IMAGE_DOWNLOAD_TIMEOUT":
-                        setLoading(false)
+                        setLoadingSkinAnalysis(false)
                         errorRef.current.innerText = "Error please try again"
                         break
                     case "CONCURRENCY_LIMIT_EXCEEDED":
-                        setLoading(false)
+                        setLoadingSkinAnalysis(false)
                         errorRef.current.innerText = "Error please try again"
                         break
                     default:
@@ -136,50 +119,77 @@ const Main = () => {
                 setSkinAnalysis(skinAnalysisArray)
                 let skinAnalysisArrayString = skinAnalysisArray.toString()
 
-                axios.post("https://skintendent-backend.onrender.com/skinAdvice", {imperfections: skinAnalysisArrayString}).then((apiResponse) => {
+                axios.post("/skinAdvice", {imperfections: skinAnalysisArrayString}).then((apiResponse) => {
                     setAiReccomendation(apiResponse.data.split("\n"))
-                    setLoading(false)
-                    setShow(true)
+                    setLoadingSkinAnalysis(false)
+                    setShowSkinAnalysis(true)
                 })
             }
         })        
     }
     
-    let props = {
+    let skinProps = {
         image: image,
         skinAnalysis: skinAnalysis, 
         aiReccomendation: aiReccomendation
     }
 
-    return (
-        <div className="w-full h-screen bg-slate-50 flex flex-col pt-5">
-            <div className="bg-slate-50 grid lg:grid-cols-2 max-w-[1440px] m-auto">
-                <div className="flex flex-col justify-center items-center w-full px-2 py-8">
-                    <div className="mx-auto">
-                        <h1 className="text-zinc-950 py-3 text-6xl md:text-7xl font-bold animate-flip-up animate-once animate-duration-1000 animate-delay-0 animate-ease-in-out">Skintendent.</h1>
-                        <p className="text-zinc-900 text-2xl md:text-3xl pb-3 animate-fade animate-once animate-duration-1000 animate-delay-[250ms] animate-ease-in">get a personalized skin care plan using <TypeAnimation sequence={['Face++',1000, 'ChatGPT',1000]} wrapper="span" speed={300} className="text-zinc-900 text-2xl md:text-3xl" repeat={Infinity}/></p>
+    const handleSubmitForProducts = (event) =>{
+        event.preventDefault()
+        event.target.className += " hidden"
+        setLoadingSearchForProducts(true)
+        setTimeout(() => {
+            scrollToProducts.current?.scrollIntoView({behavior: 'smooth'})
+        }, 250)
 
-                        <form onSubmit={handleSubmit}>
-                            <input className="py-3 px-2 w-[100%] my-2 text-xl md:text-1xl" type="text" placeholder="Enter an image URL" name="userInputtedURL"/>
-                            <input className="text-zinc-900  pb-3 pt-2 w-[100%] my-2 text-xl md:text-1xl" type="file" accept=".jpeg, .jpg" name="userUploadedImage"/>
-                            <button className="transition ease-in-out delay-75 py-3 px-6 w-[100%] text-xl md:text-1xl">Get Started</button>
-                            <p className="text-red-500 text-center pt-5 font-bold text-xl" ref={errorRef}></p>
-                        </form>
+        let productsToSearchArray = [] 
+        for(let i = 0; i < aiReccomendation.length; i++){
+            productsToSearchArray.push((aiReccomendation[i].substring(aiReccomendation[i].indexOf("-") + 1, aiReccomendation[i].lastIndexOf("("))).trim())
+        }
+        axios.post("/searchForProducts", {productsToSearch: productsToSearchArray}).then((apiResponse) => {
+            setListOfProducts(apiResponse.data)
+            setLoadingSearchForProducts(false)
+            setShowProducts(true)
+        })
+    }
+
+    let productProps = {
+        listOfProducts: listOfProducts
+    }
+
+    return (
+        <div className="bg-slate-50">
+            <div className="flex items-center justify-center h-screen">
+                <div className="bg-slate-50 grid lg:grid-cols-2 max-w-[1440px] m-auto w-full md:w-[75%] lg:w-full">
+                    <div className="flex flex-col justify-center w-full p-8">
+                        <h1 className="text-zinc-950 py-3 text-6xl md:text-7xl font-bold animate-flip-up animate-once animate-duration-1500 animate-delay-0 animate-ease-in-out">Skintendent.</h1>
+                        <p className="text-zinc-900 text-2xl md:text-3xl pb-10 animate-fade animate-once animate-duration-1500 animate-delay-[250ms] animate-ease-in">get a personalized skin care plan using <TypeAnimation sequence={['Face++',1000, 'ChatGPT',1000, 'Amazon',1000]} wrapper="span" speed={300} className="text-zinc-900 text-2xl md:text-3xl" repeat={Infinity}/></p>
+                        <button className="py-3 w-full text-xl md:text-1xl" onClick={handleSubmitForSkinAnalysis}>Get Started</button>
+                        <p className="text-red-500 text-center pt-5 font-bold text-xl" ref={errorRef}></p>
+                    </div>
+                    <div className="m-auto w-[85%]">
+                        <Webcam className="rounded-lg animate-fade animate-once animate-duration-2000 animate-delay-[1000ms] animate-ease-out" ref={webcamRef} height={720} width={1280} screenshotFormat="image/jpeg"/>
                     </div>
                 </div>
-                <div className="justify-center mx-auto w-[90%] md:w-[60%] lg:w-[80%]">
-                    <Webcam className="rounded-lg animate-fade animate-once animate-duration-2000 animate-delay-[500ms] animate-ease-out" ref={webcamRef} height={720} width={1280} screenshotFormat="image/jpeg"/>
-                </div>
-
             </div>
             <div className="flex justify-center bg-slate-50">
                 {
-                    loading ? <div className="h-[1080px] flex items-center"><section ref={refToScroll}><Dna visible={true} height="180" width="180" ariaLabel="dna-loading" wrapperStyle={{}} wrapperClass="dna-wrapper"/></section></div> : null   
+                    loadingSkinAnalysis ? <div className="h-screen flex items-center"><section ref={scrollToSkinAnalysis}><div className="flex justify-center"><Dna visible={true} height="180" width="180" ariaLabel="dna-loading" wrapperStyle={{}} wrapperClass="dna-wrapper"/></div><p className="text-zinc-900 text-3xl pb-3">analyzing your skin</p></section></div> : null   
                 }
             </div>
-            <div className="bg-slate-50">
+            <div className="flex justify-center bg-slate-50">
                 {
-                    show ? <div className="h-[1080px] flex justify-center items-center"><SkinAnalysis {...props}/></div>: null
+                    showSkinAnalysis ? <div className="h-screen flex items-center"><SkinAnalysis {...skinProps} func={handleSubmitForProducts}/></div>: null
+                }
+            </div>
+            <div className="flex justify-center bg-slate-50">
+                {
+                    loadingSearchForProducts ? <div className="h-screen flex items-center"><section ref={scrollToProducts}><div className="flex justify-center"><MagnifyingGlass visible={true} height="180" width="180" ariaLabel="MagnifyingGlass-loading" wrapperStyle={{}} wrapperClass="MagnifyingGlass-wrapper" glassColor = '#c0efff' color = '#e15b64'/></div><p className="text-zinc-900 text-3xl pb-3">Finding Best Products</p></section></div> : null   
+                }
+            </div>
+            <div className="flex justify-center bg-slate-50">
+                {
+                    showProducts ? <div className="flex items-center"><SearchForProducts {...productProps}/></div>: null
                 }
             </div>
         </div>

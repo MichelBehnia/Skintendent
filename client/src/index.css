@@ -10,5 +10,6 @@
   button {
     @apply text-white border bg-zinc-800 border-zinc-950
     hover:bg-transparent hover:text-zinc-800 rounded-md
+    transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300
   }
 }
