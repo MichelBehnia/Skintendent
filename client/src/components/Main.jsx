@@ -7,7 +7,7 @@ import { Dna, MagnifyingGlass} from  'react-loader-spinner'
 import { TypeAnimation } from 'react-type-animation';
 
 const Main = () => {
-//Make a backend host variable for axios post calls and set it to onrender link
+    const url = "https://skintendent-backend.onrender.com"
     let [image, setImage] = useState('')
     let [skinAnalysis, setSkinAnalysis] = useState([])
     let [aiReccomendation, setAiReccomendation] = useState('')
@@ -41,7 +41,7 @@ const Main = () => {
         usersImage.push("webcam")
         usersImage.push(webcamRef.current.getScreenshot())
         
-        axios.post("/analyzeSkin", {image: usersImage}).then((apiResponse) => {
+        axios.post(url+"/analyzeSkin", {image: usersImage}).then((apiResponse) => {
             let error = null
             if(apiResponse.data.error_message){
                 if(apiResponse.data.error_message.indexOf(":") !== -1){
@@ -119,7 +119,7 @@ const Main = () => {
                 setSkinAnalysis(skinAnalysisArray)
                 let skinAnalysisArrayString = skinAnalysisArray.toString()
 
-                axios.post("/skinAdvice", {imperfections: skinAnalysisArrayString}).then((apiResponse) => {
+                axios.post(url+"/skinAdvice", {imperfections: skinAnalysisArrayString}).then((apiResponse) => {
                     setAiReccomendation(apiResponse.data.split("\n"))
                     setLoadingSkinAnalysis(false)
                     setShowSkinAnalysis(true)
@@ -146,7 +146,7 @@ const Main = () => {
         for(let i = 0; i < aiReccomendation.length; i++){
             productsToSearchArray.push((aiReccomendation[i].substring(aiReccomendation[i].indexOf("-") + 1, aiReccomendation[i].lastIndexOf("("))).trim())
         }
-        axios.post("/searchForProducts", {productsToSearch: productsToSearchArray}).then((apiResponse) => {
+        axios.post(url+"/searchForProducts", {productsToSearch: productsToSearchArray}).then((apiResponse) => {
             setListOfProducts(apiResponse.data)
             setLoadingSearchForProducts(false)
             setShowProducts(true)
