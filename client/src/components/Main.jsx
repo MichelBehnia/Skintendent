@@ -7,8 +7,7 @@ import { Dna, MagnifyingGlass} from  'react-loader-spinner'
 import { TypeAnimation } from 'react-type-animation';
 
 const Main = () => {
-    // const url = "https://skintendent-backend.onrender.com"
-    const url = ""
+    const url = "https://skintendent-backend.onrender.com"
     let [image, setImage] = useState('')
     let [skinAnalysis, setSkinAnalysis] = useState([])
     let [aiReccomendation, setAiReccomendation] = useState('')
