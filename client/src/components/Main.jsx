@@ -7,7 +7,8 @@ import { Dna, MagnifyingGlass} from  'react-loader-spinner'
 import { TypeAnimation } from 'react-type-animation';
 
 const Main = () => {
-    const url = "https://skintendent-backend.onrender.com"
+    // const url = "https://skintendent-backend.onrender.com"
+    const url = ""
     let [image, setImage] = useState('')
     let [skinAnalysis, setSkinAnalysis] = useState([])
     let [aiReccomendation, setAiReccomendation] = useState('')
@@ -161,7 +162,7 @@ const Main = () => {
         <div className="bg-slate-50">
             <div className="flex items-center justify-center h-screen">
                 <div className="bg-slate-50 grid lg:grid-cols-2 max-w-[1440px] m-auto w-full md:w-[75%] lg:w-full">
-                    <div className="flex flex-col justify-center w-full p-8">
+                    <div className="flex flex-col justify-center w-full p-10 md:p-9">
                         <h1 className="text-zinc-950 py-3 text-6xl md:text-7xl font-bold animate-flip-up animate-once animate-duration-1500 animate-delay-0 animate-ease-in-out">Skintendent.</h1>
                         <p className="text-zinc-900 text-2xl md:text-3xl pb-10 animate-fade animate-once animate-duration-1500 animate-delay-[250ms] animate-ease-in">get a personalized skin care plan using <TypeAnimation sequence={['Face++',1000, 'ChatGPT',1000, 'Amazon',1000]} wrapper="span" speed={300} className="text-zinc-900 text-2xl md:text-3xl" repeat={Infinity}/></p>
                         <button className="py-3 w-full text-xl md:text-1xl" onClick={handleSubmitForSkinAnalysis}>Get Started</button>

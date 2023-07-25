@@ -3,12 +3,12 @@ import React from "react"
 const SearchForProducts = (productProps) => {
 
     return (
-        <div className="bg-slate-5 py-20 animate-fade-down animate-once animate-duration-[1500ms] animate-ease-in-out">
-            <section className="w-fit mx-auto justify-items-center justify-center">
+        <div className="bg-slate-5 py-20 m-auto">
+            <section className="w-fit justify-items-center justify-center animate-fade-down animate-once animate-duration-[1500ms] animate-ease-in-out">
                 {productProps.listOfProducts.map(products => (
                         <div className="py-10">
-                            <h1 key={products[0]} className="text-zinc-950 font-bold text-2xl px-2 pb-2 underline animate-fade-right animate-once animate-duration-[1500ms] animate-delay-250 animate-ease-in-out">{products[0]}</h1>
-                            <div className="grid lg:grid-cols-5 gap-y-20 gap-x-14 mt-10 mb-5">
+                            <h1 key={products[0]} className="text-zinc-950 font-bold text-2xl px-2 pb-2 underline animate-fade-right animate-once animate-duration-[1500ms] animate-delay-1000 animate-ease-in-out">{products[0]}</h1>
+                            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-10 my-5 items-center">
                                 {products[1].map(product =>
                                     <div className="animate-jump animate-duration-[1500ms] animate-delay-750 animate-ease-out">
                                         <a href={product.url} target="_blank" rel="noreferrer">
