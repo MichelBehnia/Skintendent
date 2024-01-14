@@ -80,35 +80,31 @@ app.post('/skinAdvice', async (req, res) => {
 })
 
 app.post('/searchForProducts', async (req, res) => {
-  let products = []
-  for(let i = 0; i <  req.body.productsToSearch.length; i++) {
-    await axios.get("https://amazon23.p.rapidapi.com/product-search", {
-      params: {
-        query: req.body.productsToSearch[i]
-      },
-      headers: {
-        'X-RapidAPI-Key': process.env.TP_AMAZON_API_KEY,
-        'X-RapidAPI-Host': process.env.TP_AMAZON_API_HOST
-      }
-    }).then((apiResponse) => {
-      console.log(apiResponse.data)
-      let topFiveProducts = []
-      let numberOfIterations = 5
-      for(let i = 0; i < numberOfIterations; i++){
-        if(apiResponse.data.result[i].title.indexOf("Sponsored") !== -1){
-          numberOfIterations++
-        } else{
-          topFiveProducts.push(apiResponse.data.result[i])
+  let productsFromAPI = []
+  try{
+    for(let i = 0; i <  req.body.productsToSearch.length; i++) {
+      await axios.get("https://real-time-amazon-data.p.rapidapi.com/search", {
+        params: {
+          query: req.body.productsToSearch[i]
+        },
+        headers: {
+          'X-RapidAPI-Key': process.env.TP_AMAZON_API_KEY,
+          'X-RapidAPI-Host': process.env.TP_AMAZON_API_HOST
         }
-      }
-      products.push([req.body.productsToSearch[i], topFiveProducts])
+      }).then((apiResponse) => {
+        console.log(apiResponse.data.data)
+        let topFiveProducts = []
+        for(let j = 0; j < 5; j++){
+          topFiveProducts.push(apiResponse.data.data.products[j])
+        }
+        productsFromAPI.push([req.body.productsToSearch[i], topFiveProducts])
+      })
       if(i+1 === req.body.productsToSearch.length){
-        return res.send(products)
+        res.send(productsFromAPI)
       }
-    }).catch((error) => {
-      console.error(error)
-      return res.send(error.response.data)
-    })
+    }
+  }catch (error){
+    console.log(error)
   }
 })
 
