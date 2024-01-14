@@ -14,7 +14,7 @@ import { db } from "../config/firebase"
 import { addDoc, collection, doc, setDoc} from "firebase/firestore"
 
 const Main = () => {
-    const url = "http://localhost:5000"
+    const url = "https://skintendent-backend.onrender.com"
     let [image, setImage] = useState('')
     let [skinAnalysis, setSkinAnalysis] = useState([])
     let [aiReccomendation, setAiReccomendation] = useState('')
