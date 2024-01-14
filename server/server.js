@@ -4,7 +4,7 @@ const axios = require('axios')
 const cors = require('cors')
 const {Configuration, OpenAIApi} = require('openai')
 app.use(express.json())
-const PORT = "https://skintendent-backend.onrender.com"
+const PORT = process.env.PORT || 5000
 const FormData = require('form-data')
 const atob = require('atob')
 const fs = require('fs')
