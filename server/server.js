@@ -79,34 +79,34 @@ app.post('/skinAdvice', async (req, res) => {
 
 })
 
-app.post('/searchForProducts', async (req, res) => {
-  let productsFromAPI = []
-  try{
-    for(let i = 0; i <  req.body.productsToSearch.length; i++) {
-      await axios.get("https://real-time-amazon-data.p.rapidapi.com/search", {
-        params: {
-          query: req.body.productsToSearch[i]
-        },
-        headers: {
-          'X-RapidAPI-Key': process.env.TP_AMAZON_API_KEY,
-          'X-RapidAPI-Host': process.env.TP_AMAZON_API_HOST
-        }
-      }).then((apiResponse) => {
-        console.log(apiResponse.data.data)
-        let topFiveProducts = []
-        for(let j = 0; j < 5; j++){
-          topFiveProducts.push(apiResponse.data.data.products[j])
-        }
-        productsFromAPI.push([req.body.productsToSearch[i], topFiveProducts])
-      })
-      if(i+1 === req.body.productsToSearch.length){
-        res.send(productsFromAPI)
-      }
-    }
-  }catch (error){
-    console.log(error)
-  }
-})
+// app.post('/searchForProducts', async (req, res) => {
+//   let productsFromAPI = []
+//   try{
+//     for(let i = 0; i <  req.body.productsToSearch.length; i++) {
+//       await axios.get("https://real-time-amazon-data.p.rapidapi.com/search", {
+//         params: {
+//           query: req.body.productsToSearch[i]
+//         },
+//         headers: {
+//           'X-RapidAPI-Key': process.env.TP_AMAZON_API_KEY,
+//           'X-RapidAPI-Host': process.env.TP_AMAZON_API_HOST
+//         }
+//       }).then((apiResponse) => {
+//         console.log(apiResponse.data.data)
+//         let topFiveProducts = []
+//         for(let j = 0; j < 5; j++){
+//           topFiveProducts.push(apiResponse.data.data.products[j])
+//         }
+//         productsFromAPI.push([req.body.productsToSearch[i], topFiveProducts])
+//       })
+//       if(i+1 === req.body.productsToSearch.length){
+//         res.send(productsFromAPI)
+//       }
+//     }
+//   }catch (error){
+//     console.log(error)
+//   }
+// })
 
 app.listen(PORT, err => {
   if(err) console.log(err)
