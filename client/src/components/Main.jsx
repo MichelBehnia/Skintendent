@@ -246,7 +246,6 @@ const Main = () => {
                     </div>
                 </div>
             </div>
-            {/* fix all this show conditional comps code so the code is stacked ontop of eachother instead on one line */}
             <div className="flex justify-center bg-slate-50">
                 {
                     showWebcamComp ? <div className="flex items-center"><section ref={scrollToWebcam}><WebcamComp {...webcamProps} func={handleSubmitForSkinAnalysis} ref={webcamRef}/></section></div> : null
